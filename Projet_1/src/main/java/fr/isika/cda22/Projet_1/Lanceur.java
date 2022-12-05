@@ -23,7 +23,7 @@ public class Lanceur {
 						data[4] = br.readLine(); // année passée en String
 						data[5] = br.readLine(); // pour lire le caractère *
 						cpt++;
-						Stagiaire st = new Stagiaire(data[0], data[1], data[2], data[3], data[4]); // création d'un nouveau stagiaire
+						Stagiaire st = new Stagiaire(data[4], data[1], data[2], data[3], data[0]); // création d'un nouveau stagiaire
 						monArbre.ajouter(st); // ajout dans l'arbre
 						
 						// System.out.println(st.getNom() + " a été ajouté");
