@@ -1,9 +1,15 @@
 package fr.isika.cda22.Projet_1;
 
+import java.io.File;
+import java.util.Scanner;
+
+import javafx.event.ActionEvent;
+
 public class Admin {
 	
-	protected String userId;
-	protected String mdp;
+	protected static String userId;
+	protected static String mdp;
+	
 	
 	
 	public Admin(String userId, String mdp) {
@@ -13,49 +19,95 @@ public class Admin {
 	}
 
 
-	public String getUserId() {
+	public static String getUserId() {
 		return userId;
 	}
 
 
-	public void setUserId(String userId) {
-		this.userId = userId;
+	public static void setUserId(String userId) {
+		userId = userId;
 	}
 
 
-	public String getMdp() {
+	public static String getMdp() {
 		return mdp;
 	}
 
 
-	public void setMdp(String mdp) {
-		this.mdp = mdp;
+	public static void setMdp(String mdp) {
+		mdp = mdp;
 	}
 	
 	
 	
 	
 	
-	public int checkUser (String userIdInput, String mdpInput ) {
+	
+	
+	
+	
+//	  public void actionPerformed(ActionEvent event)
+//	   {
+//	     File inputFile = new File("USERDATA.txt");
+//	     
+//	     String userIdInput = userIdInput.getText();
+//	     String mdpInput = mdpInput.getText();
+//	     
+//	     try {
+//	            Scanner in = new Scanner(new File("USERDATA.txt"));
+//	            while (in.hasNextLine())
+//	            {
+//	              String s = in.nextLine();  
+//	              String[] sArray = s.split(",");
+//	              
+//	              System.out.println(sArray[0]); //Just to verify that file is being read
+//	              System.out.println(sArray[1]);
+
+//	              
+//	              if (userIdInput == sArray[0] && mdpInput == sArray[1])
+//	              {
+//	                JOptionPane.showMessageDialog(null,
+//	                    "Login Successful", "Success",
+//	                    JOptionPane.INFORMATION_MESSAGE);
+//	              }
+//	              else
+//	              {
+//	                JOptionPane.showMessageDialog(null,
+//	                    "Invalid Username / Password Combo", "Error",
+//	                    JOptionPane.ERROR_MESSAGE);
+//	              }
+//	            }
+	            
+//	            in.close();
+	            
+//	        } catch (FileNotFoundException e) {
+//	            JOptionPane.showMessageDialog(null,
+//	                    "User Database Not Found", "Error",
+//	                    JOptionPane.ERROR_MESSAGE);
+//	        }
+	    
+	   
+	  
 		
 		
 		
-		if (AdminList.contains(userIdInput)) { // Si userId existe dans la liste
+//		
+//		if (AdminList.contains(userIdInput)) { // Si userId existe dans la liste
+//			
+//			if (this.mdp==mdpInput) {
+//				return 1; // mot de passe correspond
+//			}
+//			else {
+//				return 2;// mot de passe ne correspond pas
+//			}
+//		}
+//			else {
+//				return 3;// User id n'est pas dans la liste
+//				
+//			}
+		
 			
-			if (this.mdp==mdpInput) {
-				return 1; // mot de passe correspond
-			}
-			else {
-				return 2;// mot de passe ne correspond pas
-			}
-		}
-			else {
-				return 3;// User id n'est pas dans la liste
-				
-			}
 		
-			
-		}
 		
 	
 	
