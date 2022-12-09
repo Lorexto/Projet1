@@ -4,8 +4,8 @@ public class NonAdmin {
 
 	protected String userId;
 	protected String mdp;
-	
-	
+
+
 	public NonAdmin(String userId, String mdp) {
 		super();
 		this.userId = userId;
@@ -31,8 +31,8 @@ public class NonAdmin {
 	public void setMdp(String mdp) {
 		this.mdp = mdp;
 	}
-	
-	
-	
-	
+
+
+
+
 }

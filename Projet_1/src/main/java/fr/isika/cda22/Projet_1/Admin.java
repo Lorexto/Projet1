@@ -1,21 +1,16 @@
 package fr.isika.cda22.Projet_1;
 
-import java.io.File;
-import java.util.Scanner;
-
-import javafx.event.ActionEvent;
-
 public class Admin {
-	
+
 	protected static String userId;
 	protected static String mdp;
-	
-	
-	
+
+
+
 	public Admin(String userId, String mdp) {
 		super();
-		this.userId = userId;
-		this.mdp = mdp;
+		Admin.userId = userId;
+		Admin.mdp = mdp;
 	}
 
 
@@ -37,33 +32,33 @@ public class Admin {
 	public static void setMdp(String mdp) {
 		mdp = mdp;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
 //	  public void actionPerformed(ActionEvent event)
 //	   {
 //	     File inputFile = new File("USERDATA.txt");
-//	     
+//
 //	     String userIdInput = userIdInput.getText();
 //	     String mdpInput = mdpInput.getText();
-//	     
+//
 //	     try {
 //	            Scanner in = new Scanner(new File("USERDATA.txt"));
 //	            while (in.hasNextLine())
 //	            {
-//	              String s = in.nextLine();  
+//	              String s = in.nextLine();
 //	              String[] sArray = s.split(",");
-//	              
+//
 //	              System.out.println(sArray[0]); //Just to verify that file is being read
 //	              System.out.println(sArray[1]);
 
-//	              
+//
 //	              if (userIdInput == sArray[0] && mdpInput == sArray[1])
 //	              {
 //	                JOptionPane.showMessageDialog(null,
@@ -77,23 +72,23 @@ public class Admin {
 //	                    JOptionPane.ERROR_MESSAGE);
 //	              }
 //	            }
-	            
+
 //	            in.close();
-	            
+
 //	        } catch (FileNotFoundException e) {
 //	            JOptionPane.showMessageDialog(null,
 //	                    "User Database Not Found", "Error",
 //	                    JOptionPane.ERROR_MESSAGE);
 //	        }
-	    
-	   
-	  
-		
-		
-		
-//		
+
+
+
+
+
+
+//
 //		if (AdminList.contains(userIdInput)) { // Si userId existe dans la liste
-//			
+//
 //			if (this.mdp==mdpInput) {
 //				return 1; // mot de passe correspond
 //			}
@@ -103,19 +98,19 @@ public class Admin {
 //		}
 //			else {
 //				return 3;// User id n'est pas dans la liste
-//				
+//
 //			}
-		
-			
-		
-		
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
 
 }
