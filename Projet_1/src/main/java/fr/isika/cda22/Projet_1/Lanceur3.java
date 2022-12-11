@@ -13,37 +13,54 @@ public class Lanceur3 {
 	public final static int TAILLE_IND_FD = 2*4;
 	public final static int TAILLE_IND_DBL = 2*4;
 	
-	@SuppressWarnings("finally") // pour que le finally s'exécute correctement
+	//@SuppressWarnings("finally") // pour que le finally s'exécute correctement
 	public static void main(String[] args) {
 		Noeud3 n = new Noeud3();
-		n = readTxt();
-		System.out.println("Lecture du fichier bin");
-		try {
-			File file= new File("src/main/java/fr/isika/cda22/Projet_1/fichbinii.bin");
-			RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinii.bin", "rw");
-			raf.seek(0);
-			for (int j = 0; j < 100 ; j++) {
-				String contenu = "";
-				for(int i = 0; i < 58 ; i++) {
-					contenu += raf.readChar();
-				}	
-				for(int i = 0; i < 4 ; i++) {
-					contenu += raf.readInt();
-				}	
-				System.out.println("Noeud " + 0 + " : "+contenu +"\n");
+		Arbre3 b= new Arbre3();
 		
-				
-           n.searchInBinFile(file, n.getCle(), n);
-           
-			}	
-			raf.close();
+		System.out.println("Lecture du fichier bin");
+					
+				try {
+					RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
+					raf.setLength(0);
+					
+					n = readTxt(raf);
+					
+					raf.close();
+		
+					
 		} catch (IOException e) {
-			e.printStackTrace();
-		}	
+					e.printStackTrace();
+				}	
+				
+				System.out.println("");
+				System.out.println("");
+				System.out.println("");
+				//LectureBin.LectureBin();
+				System.out.println("HAHAHAHAHAHHAAHHA");
+				try {
+					RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
+			     	n.searchInBinFile(n, raf, "AUGEREAU"); 
+					raf.seek(0);
+                   LectureBin.LectureBin();
+                   n.SupprimerNoeudStagiaireV2( n.searchInBinFile(n, raf, "UNG"), raf);
+                   LectureBin.LectureBin();	
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+				
+
+				} // fin main// fin main
 	
-	} // fin main
 	
-	public static Noeud3 readTxt() {
+	///////////////////////////////////////////////
+	/// LIRE STAGIAIRES A PARTIR DU FICHIER TEXTE
+	//////////////////////////////////////////////
+	public static Noeud3 readTxt(RandomAccessFile raf) {
+		// FICHIER TOT ;src/main/java/fr/isika/cda22/Projet_1/STAGIAIRES.DON
+		//FIchier TXT Test nb reduit : src/main/java/fr/isika/cda22/Projet_1/TestStagiairesdizaine.txt
+		// FICHIER TEST: src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin
 		
 		try {
 			Noeud3 n = null;
@@ -63,22 +80,18 @@ public class Lanceur3 {
 				data[4] = br.readLine(); // année passée en String
 				data[5] = br.readLine(); // pour lire le caractère *
 				Stagiaire st = new Stagiaire(data[0], data[1], data[2], data[3], data[4]);
+				System.out.println(st);
 				if (cptNoeud == 0) {	
 					nParent = new Noeud3(st, -1, -1, -1, cptNoeud); // on part toujours du parent racine
 				}
-				
 				System.out.println("");
-				//System.out.println("Lecture .DON de " + data[0]);
+				System.out.println("Lecture .DON de " + data[0]);
 				n = new Noeud3(st, -1, -1, -1, cptNoeud); // le nouveau neoud correspond à la ligne lue dans le .DON
 				cptNoeud++;
-				
-				n.ajouterStagiaire(n, nParent, null, null);
-				//a.ajouter(n, nParent);	
-				
+				n.ajouterStagiaire(n, nParent, raf);	
 			}//while br
 			br.close();
 			fr.close();
-			//LectureBin.LectureBin();
 			return n;
 		} catch (IOException e) {
 			System.out.println("on est dans l'eception du lanceur");

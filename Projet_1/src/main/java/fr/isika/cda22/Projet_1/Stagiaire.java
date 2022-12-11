@@ -50,6 +50,18 @@ public class Stagiaire {
 		}
 		return nomLong;
 	}
+	public <nom> String setToNomLong() {
+		String nomLong = null;
+		
+			for(int i = nom.length(); i < TAILLE_MAX_NOM; i++) {
+				nomLong += nom+"*";
+			}
+		
+		return nomLong;
+	}
+	
+	
+	
 	
 	public String getPrenomLong() {
 		String prenomLong = prenom;
@@ -171,7 +183,7 @@ public class Stagiaire {
 	
 	
 	public boolean compareToDoublon(Stagiaire myStagiaire){
-		if (myStagiaire.getNom().compareTo(this.nom) == 0) { // 0 si c'est identique
+		if (myStagiaire.getNom().compareTo(this.getNom()) == 0&&myStagiaire.getPrenom().compareTo(this.getPrenom())==0) { // 0 si c'est identique
 			 
 				return true;
 			}
@@ -179,6 +191,12 @@ public class Stagiaire {
 				
 			// on compare les prénoms
 	
+	}
+
+
+	public void setNom(Object writeChars, String nomLong) {
+		
+		
 	}
 }
 

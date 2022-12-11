@@ -1,6 +1,8 @@
 package fr.isika.cda22.Projet_1;
 import java.io.BufferedReader;
+import java.io.EOFException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -49,13 +51,13 @@ public class Arbre3 {
 		}
 	}
 
-	public void ajouter(Noeud3 n, Noeud3 nParent, RandomAccessFile raf,File file) {
+	public void ajouter(Noeud3 n, Noeud3 nParent, RandomAccessFile raf) throws FileNotFoundException, EOFException {
 		if (isEmpty()) {
 			this.racine = new Noeud3(n.getCle(), -1, -1, -1, 0);
 			n.ecrireNoeudFinBin(n, raf); 
 			System.out.println("Racine : " +  n.getCle());
 		} else {
-			this.racine.ajouterStagiaire(n, nParent, raf, file);
+			this.racine.ajouterStagiaire(n, nParent, raf);
 		}
 	}
 }

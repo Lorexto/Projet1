@@ -4,12 +4,6 @@ Pascale
 BOBI 5
 2008
 *
-LACROIX
-Pascale
-91
-BOBI 5
-2008
-*
 CHAVENEAU
 Kim Anh
 92
@@ -33,12 +27,6 @@ Kévin
 76
 AI 78
 2010
-*
-CHAVENEAU
-Kim Anh
-92
-ATOD 22
-2014
 *
 UNG
 Jet-Ming
@@ -64,47 +52,11 @@ Brahim
 AI 60
 2003
 *
-NOUAR
-Adel
-94
-ATOD 5
-2009
-*
-PUCELLE
-David
-75
-ATOD 12
-2011
-*
-ROIGNANT
-Pierre-Yves
-77
-AI 95
-2015
-*
 ROIGNANT
 Pierre-Yves
 77
 ATOD 26 CP
 2015
-*
-CHONE
-Martin
-92
-ATOD 24 CP
-2015
-*
-AKHIAD
-Brahim
-92
-AI 60
-2003
-*
-NOUAR
-Adel
-94
-ATOD 5
-2009
 *
 PUCELLE
 David
@@ -135,40 +87,4 @@ Yahya
 93
 AROBAS 3
 2008
-*
-KAHLOUL DIA
-Imen
-94
-ATOD 24
-2015
-*
-KHARROUBI
-Mehdi
-93
-AI 86
-2012
-*
-MOURCHID
-Mohammed
-95
-AI 69
-2006
-*
-LAURENS
-Daniel
-94
-AI 76
-2009
-*
-GRIMM
-Jonathan
-92
-AI 80
-2011
-*
-SCHMIDLIN
-Yann
-94
-AI 63
-2004
 *
