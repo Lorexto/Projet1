@@ -52,23 +52,11 @@ Brahim
 AI 60
 2003
 *
-ROIGNANT
-Pierre-Yves
-77
-ATOD 26 CP
-2015
-*
 PUCELLE
 David
 75
 ATOD 12
 2011
-*
-ROIGNANT
-Pierre-Yves
-77
-AI 95
-2015
 *
 LECLERC
 Dominique

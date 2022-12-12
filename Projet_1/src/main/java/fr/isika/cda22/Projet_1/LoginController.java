@@ -17,7 +17,7 @@ public class LoginController {
 	public static TextField User_ID;
 	public static PasswordField userMdpCheck;
 	public PageAdministrateur PageAdmin;
-	 public VueMenu vueMenu;
+	public VueMenu vueMenu;
 
 
 	public static boolean loginButton(EventHandler<? super MouseEvent> eventHandler) throws IOException

@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.util.ArrayList;
 
 
 
@@ -215,7 +216,7 @@ public class Noeud3 {
 //////////////////////////////////////////////
 	// LIT LES NOEUDS SELON LE NUMERO CHOISI
 //////////////////////////////////////////////
-	public static Noeud3 lireParentSuivant(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+	public static Noeud3 lireParentSuivant(int numNoeudALire, RandomAccessFile raf) {
 
 		try {
 			while(numNoeudALire<= raf.length()/132) {
@@ -333,6 +334,24 @@ return DBL;
 
 }
 ////////////////////////////////////////////////////////
+
+public ArrayList<Noeud3> ordreAlpha(int numNoeud, RandomAccessFile raf, ArrayList<Noeud3> ListOrdreAlpha) {
+
+	
+	Noeud3 n = lireParentSuivant(numNoeud, raf); // on lit le noeud
+
+	if (n.getFilsGauche() != -1) {
+		ordreAlpha(n.getFilsGauche(), raf, ListOrdreAlpha);
+	}
+	ListOrdreAlpha.add(n);
+
+	if (n.getFilsDroit() != -1) {
+		ordreAlpha(n.getFilsDroit(), raf, ListOrdreAlpha);
+	}
+
+	return ListOrdreAlpha;
+}
+
 
 
 		//@SuppressWarnings("unused")
