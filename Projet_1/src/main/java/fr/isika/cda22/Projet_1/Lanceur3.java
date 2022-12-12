@@ -40,11 +40,12 @@ public class Lanceur3 {
 				System.out.println("HAHAHAHAHAHHAAHHA");
 				try {
 					RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
-			     	n.searchInBinFile(n, raf, "AUGEREAU"); 
-					raf.seek(0);
-                   LectureBin.LectureBin();
-                   n.SupprimerNoeudStagiaireV2( n.searchInBinFile(n, raf, "UNG"), raf);
-                   LectureBin.LectureBin();	
+			     n.searchInBinFile(raf, "ROIGNANT"); 
+//					raf.seek(0);
+//                   LectureBin.LectureBin();
+                  // n.SupprimerNoeudStagiaireV2( n.searchInBinFile(raf, "AUGEREAU"), raf);
+                  //LectureBin.LectureBin();	
+                  //LectureBin.LectureBinSansLesSupprimes();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}

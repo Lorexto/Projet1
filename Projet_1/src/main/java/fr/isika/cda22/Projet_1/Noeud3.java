@@ -123,7 +123,7 @@ public class Noeud3 {
 		
 //////SI NOM ET PRENOM EGAUX. NB= NE FONCTIONNE QUE AVEC LE CONTAINS
 
-		 if ( (cleParent.getNom().contains(cle.getNom())) && (cleParent.getPrenom().contains(cle.getPrenom())) ) {
+		 if ( (cleParent.getNom().contains(cle.getNom())) ) {
 			 if(nParent.getDoublon()==-1) {
 					ecrireNoeudFinBin(n, raf);
 					nParent.setDoublon(n.getNumeroNoeud());
@@ -280,10 +280,66 @@ public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFExcepti
 		}
 		return nom;
 }
-	
 /////////////////////////////////////////////////////////////////	
+///////////////////////////////////////////////////////////////////	
+
+public int lireFD(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+int FD=-1;
+try {
+	System.out.println(numNoeudALire);
+raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET+TAILLE_IND_FG);
+System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+FD = raf.readInt();
+System.out.println(FD+"---");
+System.out.println(FD+"FD+++");
+
+return FD;
+
+}catch (IOException e) {
+e.printStackTrace();	
+}
+return FD;
+}
+
+/////////////////////////////////////////////////////////////////
+public int lireFG(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+int FG=-1;
+
+try {
+raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET);
+System.out.println(numNoeudALire);
+System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+FG = raf.readInt();
+System.out.println(FG+"+++");
+return FG;
+}catch (IOException e) {
+e.printStackTrace();	
+}
+return FG;
+
+}
+//////////////////////////////////////////////////////////
+public int lireDBL(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+int DBL=-1;
+
+try {
+raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET+TAILLE_IND_FG+TAILLE_IND_FD);
+System.out.println(numNoeudALire);
+System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+DBL = raf.readInt();
+System.out.println(DBL+"---");
+return DBL;
+}catch (IOException e) {
+e.printStackTrace();	
+}
+return DBL;
+
+}
+////////////////////////////////////////////////////////
+
+
 		//@SuppressWarnings("unused")
-public Noeud3 searchInBinFile(Noeud3 n,RandomAccessFile raf, String nomRech) throws IOException {	
+public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOException {	
 	try {	
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
 		int sizeFile= (int) raf.length();
@@ -297,11 +353,12 @@ public Noeud3 searchInBinFile(Noeud3 n,RandomAccessFile raf, String nomRech) thr
 		for(int i = nomRech.length(); i < TAILLE_MAX_NOM; i++) {
 			nomRech= nomRech+"*"; // Transformer le nom en recherche comme les noms en fichier BIN pour comparaison
 		    }
-		System.out.println("NOM RECHERCHE:  "+ nomRech);
+		System.out.println("RECHERCHE PAR NOM DE :  "+ nomRech);
 		// pour limiter la recherche en nombre noeuds
-		 for ( h=0;h<maxNoeuds;h++) { 		
+		
+		for(h=0;h<sizeFile;h++) {		
 		// on compare la lecture des noms du fichierBIN avec le nom recherche
-		if(n.lireNom(h, raf).compareTo(nomRech)==0){ 
+		if(lireNom(h, raf).compareTo(nomRech)==0){ 
 	///////// LECTRURE PRENOMS DPT ID ANNEE FG FD DBL POS///////////
 			String prenomBIN = "";
 			for( j =0;  j<20 ; j++) {
@@ -328,13 +385,21 @@ public Noeud3 searchInBinFile(Noeud3 n,RandomAccessFile raf, String nomRech) thr
 			System.out.println(DBL);
 			int NumNoeud = raf.readInt();
 			System.out.println(NumNoeud);
-			Stagiaire stTrouve = new Stagiaire(n.lireNom(h, raf), prenomBIN, dptBIN, idBIN, anneeBIN);
+			Stagiaire stTrouve = new Stagiaire(lireNom(h, raf), prenomBIN, dptBIN, idBIN, anneeBIN);
 			Noeud3 n2 = new Noeud3(stTrouve, FG, FD, DBL, NumNoeud);
-			System.out.println(" VOICI LE STAGIAIRE TROUVE:   "+n.lireNom(h, raf));
+			System.out.println(" VOICI LE STAGIAIRE TROUVE:   "+lireNom(h, raf));
 			System.out.println(n2.getCle());
-							
+				h=NumNoeud;	
+	        if(DBL!=-1) {
+	        	System.out.println("Autres FD TROUVES");
+	        	raf.seek(DBL*132);
+	        	
+	        }
+			
 			return n2;	}
-	   } 
+		}
+	
+		
 }catch (IOException e) {
 	e.printStackTrace();
 	raf.close();}
@@ -360,12 +425,10 @@ RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2,prenomFinal, raf);
 RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2,dptFinal, raf);
 RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MAX_DPT*2,idFinal, raf);
 RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MAX_DPT*2+TAILLE_MAX_ID*2,anneeFinal, raf);
-System.out.println(n.getCle());
-	System.out.println("le successeur est:  "+n);
+System.out.println("le successeur est:  "+n);
 
 // a traduire pour du binaire...  avec la  taiille octets.
 while(n.filsGauche!=-1) {
-	System.out.println(n.getFilsGauche());
     PositionARemplacer= ((int) raf.getFilePointer());
 	n=lireParentSuivant(n.filsGauche, raf);
 	nomFinal= n.getCle().getNom();
@@ -378,7 +441,6 @@ while(n.filsGauche!=-1) {
 	RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2,dptFinal, raf);
 	RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MAX_DPT*2,idFinal, raf);
 	RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MAX_DPT*2+TAILLE_MAX_ID*2,anneeFinal, raf);
-	System.out.println(n.getCle());
 System.out.println("Le successeur final est  est:   "+ n.cle.toString());
 }
 return n;
@@ -390,10 +452,8 @@ return n;
 //////////////////////////////////////////////////
 
 public Noeud3 predecesseur(Noeud3 n,RandomAccessFile raf) throws IOException {
-System.out.println(n.getCle());
 int PositionARemplacer= ((int) raf.getFilePointer());	
 n= lireParentSuivant(n.filsGauche, raf);
-System.out.println(n.getCle());
 raf.seek(n.getNumeroNoeud());
 //init variables a remplacer
 String nomFinal= n.getCle().getNom();
@@ -410,10 +470,8 @@ RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MA
 System.out.println(n.getCle());
 //
 while(n.filsDroit!=-1) {
-	System.out.println(n.getCle());
 	PositionARemplacer= ((int) raf.getFilePointer());
 	n=lireParentSuivant(n.filsDroit, raf);
-	
 	// EXECUTER Le changement en ecriture
 	nomFinal= n.getCle().getNom();
 	prenomFinal=n.getCle().getPrenom();
@@ -425,7 +483,6 @@ while(n.filsDroit!=-1) {
 	RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2,dptFinal, raf);
 	RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MAX_DPT*2,idFinal, raf);
 	RemplaceString(PositionARemplacer+TAILLE_MAX_NOM*2+TAILLE_MAX_PRENOM*2+TAILLE_MAX_DPT*2+TAILLE_MAX_ID*2,anneeFinal, raf);
-	System.out.println(n.getCle());
 System.out.println("Le predecesseur alphabetique est : "+ n.cle.toString());
 
 }
@@ -435,42 +492,62 @@ return n;
 ///// METHODE REMPLACER STRINGS DANS BIN
 ////////////////////////////////////////////////////
 private void RemplaceString(int PositionARemplacer, String donneeARemplacer, RandomAccessFile raf) {
-
 try {			
 raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
 raf.seek(PositionARemplacer);
 raf.writeChars(donneeARemplacer);
-
 }
 catch (IOException e) {
 e.printStackTrace();}
 }
-/////////////////////////////////////////////////////////////////////////////
-public void SetToVoid(int PositionARemplacer, Noeud3 aEffacer,RandomAccessFile raf) throws IOException {
-	try {			
+/////////////////////////////////////////////////////////////////////////////////////
+//////// MODIFIER LES INDICES DU PERE POUR LA SUPPRESSION DE FEUILLE////
+////////////////////////////////////////////////////////////////////////////////////
+public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {	
+	try {	
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
-		
-		String VOID = "";
-		for( int j =0;  j<20 ; j++) {
-		raf.writeChars(VOID);}
-	
-		
-	}
-	catch (IOException e) {
-	e.printStackTrace();}
-	}
-
-////////////////////////////////////////////////////////////////////////////
-
-
-
+		int sizeFile= (int) raf.length();
+		int maxNoeuds= sizeFile/132;
+		System.out.println(sizeFile+"CHERCHER PERE");
+		int h;
+		raf.getFilePointer();
+		System.out.println(raf.getFilePointer());
+		 for (h=0; h<maxNoeuds;h++) { 		
+				// on compare la lecture des indices du fichierBIN avec le nom recherche
+				if(lireFD(h, raf)==n.getNumeroNoeud()){ 
+					System.out.println(raf.getFilePointer()+"HAHIHO");
+					System.out.println(n.lireFD(h, raf));
+					raf.seek((h*132)+116+TAILLE_IND_FG);
+					System.out.println(raf.getFilePointer());
+					System.out.println("ECRITURE A -1 du pere pour FD");
+					raf.writeInt(-1);	
+				}
+				else if(lireFG(h, raf)==n.getNumeroNoeud()) {
+					raf.seek((h*132)+116);
+					System.out.println(raf.getFilePointer());
+					System.out.println("ECRITURE A -1 du pere pour FG");
+					raf.writeInt(-1);
+					raf.seek((h*132)+116);
+					int FG=raf.readInt();
+					System.out.println(FG);
+				}
+				else if(lireDBL(h, raf)==n.getNumeroNoeud()) {
+					raf.seek((h*132)+116+TAILLE_IND_FG+TAILLE_IND_FD);
+					System.out.println("ECRITURE A -1 du pere pour DBL");
+					raf.writeInt(-1);
+				}
+		   } 
+	}catch (IOException e) {
+		e.printStackTrace();
+		raf.close();}
+		return null;	}
 //////////////////////////////////////////////////////////////////////////////
 //////////////////METHODE POUR SUPPRIMER NOEUD FICHIER BIN/////////////
 ///////////////////////////////////////////////////////////////////////////
 public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
 	try {			
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
-		searchInBinFile(aEffacer, raf, aEffacer.getCle().getNomLong()).getNumeroNoeud();
+		searchInBinFile(raf, aEffacer.getCle().getNomLong()).getNumeroNoeud();
 		aEffacer.getFilsDroit();
 		aEffacer.getFilsGauche();
 		raf.seek(aEffacer.numeroNoeud*132);
@@ -478,26 +555,19 @@ public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
 			   System.out.println("Element inexistant");
 			   return null;}  // 
 		   
-		   if(aEffacer.filsGauche==-1 && aEffacer.filsDroit==-1) {
-			   System.out.println((int) raf.getFilePointer());
-			   int positionElement=aEffacer.numeroNoeud*132;
-			  raf.seek(positionElement);
-			  String VOID = " ";
-				for( int j =0;  j<64 ; j++) {
-				raf.writeChars(VOID);}			   
+		   if(aEffacer.filsGauche==-1 && aEffacer.filsDroit==-1) { // SUPPRESSION FEUILLE
+			   int positionElement=aEffacer.numeroNoeud*132; //position de l'element a supprimer
+			   modifFilsPere(aEffacer, raf);//on va modifier l'indice du pere du noeud a supprimer
+			   raf.seek(positionElement+116+12);// on va chercher le numero du noeud a supprimer
+			   raf.writeInt(-1);//on met le numero du noeud a -1 pour ne plus le lire et le considerer dans la liste
 				}
 		   else if (aEffacer.getFilsDroit()!=-1) {
 					aEffacer.setCle(successeur(aEffacer, raf).cle);
-					System.out.println(aEffacer.cle.toString());
-					//Noeud3 FilsaDroite= lireParentSuivant(aEffacer.getFilsDroit(), raf);
-					//aEffacer= lireParentSuivant(aEffacer.filsDroit, raf);
 					aEffacer= SupprimerNoeudStagiaireV2(lireParentSuivant(aEffacer.filsDroit, raf), raf);
 					}
 		   else { 
 					aEffacer.getFilsGauche();
 					aEffacer.setCle(predecesseur(aEffacer, raf).cle);
-					//Noeud3 n2= lireParentSuivant(indiceFD, raf);
-				//	Noeud3 nGauche= lireParentSuivant(aEffacer.filsGauche, raf);
 					aEffacer= SupprimerNoeudStagiaireV2(lireParentSuivant(aEffacer.filsGauche, raf), raf);		
 				}
 	       return aEffacer;
@@ -506,6 +576,76 @@ public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
 		e.printStackTrace();}
 	return aEffacer;
 }
+////////////////////////////////////////////////////////
+///////////////Ecrire Noeud dans position BIN choisie
+///////////////////////////////////////////////////////
+public int ecrireNoeudBin(int numNoeud, Noeud3 n, RandomAccessFile raf) {
+	Stagiaire cle = n.getCle();
+	try {
+		raf.seek(numNoeud * TAILLE_NOEUD);
+		raf.writeChars(cle.getNomLong());
+		raf.writeChars(cle.getPrenomLong());
+		raf.writeChars(cle.getDptLong());
+		raf.writeChars(cle.getIdLong());
+		raf.writeChars(cle.getAnneeLong());
+		raf.writeInt(n.getFilsDroit());
+		raf.writeInt(n.getFilsGauche());
+		raf.writeInt(n.getDoublon());
+		raf.writeInt(n.getNumeroNoeud());
+		int curseur = (int) raf.getFilePointer();
+		return curseur;
+	} catch (IOException e) {
+		e.printStackTrace();
+		return -1;
+	}
+}
+//////////////////////////////////////////////////////////
+///////////////ECRIRE CLE BIN//////////////
+////////////////////////////////////////////////////////
+public int ecrireCleBin(int numNoeud, Noeud3 n, RandomAccessFile raf) {
+	Stagiaire cle = n.getCle();
+	try {
+		raf.seek(numNoeud * TAILLE_NOEUD);
+		raf.writeChars(cle.getNomLong());
+		raf.writeChars(cle.getPrenomLong());
+		raf.writeChars(cle.getDptLong());
+		raf.writeChars(cle.getIdLong());
+		raf.writeChars(cle.getAnneeLong());
+		int curseur = (int) raf.getFilePointer();
+		return curseur;
+	} catch (IOException e) {
+		e.printStackTrace();
+		return -1;
+	}
+}
+
+
+
+//////////////////////////////////////////////////////
+////////// MODIFIER STAGIAIRE////////
+/////////////////////////////////////////////////////
+public void modifierStagiaire(Stagiaire stModif, RandomAccessFile raf, boolean nomModif) throws IOException {
+	//Noeud3 noeudModif = searchInBinFile(raf, stModif.getNom());
+	//System.out.println(noeudModif.getCle().getNom());
+	Stagiaire stModif2 = new Stagiaire("ELACROIX", "arlette", "98", "ATOD 22", "2014");
+	Noeud3 noeudModif = new Noeud3(stModif2, -1, -1, -1, 0);
+	// si le champ modifié est autre que le nom, on modifie juste les valeurs
+	if (nomModif == false) {
+		ecrireCleBin(noeudModif.getNumeroNoeud(), noeudModif, raf);
+		System.out.println("Modif autre que nom du noeud numéro " + noeudModif.getNumeroNoeud());
+	} else {
+		// si le champ modifié est le nom, il faut le reranger le stagiaire
+		Noeud3 racine = lireParentSuivant(0, raf);
+		noeudModif.setNumeroNoeud((int)raf.length()/TAILLE_NOEUD);
+		ajouterStagiaire(noeudModif, racine, raf);
+		System.out.println("Modif du nom du noeud numéro " + noeudModif.getNumeroNoeud());
+		System.out.println(noeudModif.getNumeroNoeud());
+		LectureBin.LectureBin();
+	}
+}
+
+
+
 ////////////////////////////////////////////////FIN METHODE/////////////////////////////////////////////
 
 

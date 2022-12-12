@@ -23,8 +23,6 @@ public class LoginController {
 
 	public static boolean loginButton(EventHandler<? super MouseEvent> eventHandler) throws IOException
     {
-
-
         //Chemin jusqu'au fichir Admin
         Path path = Paths.get("C\\\\src\\\\main\\\\java\\\\fr\\\\isika\\\\cda22\\\\Projet_1\\\\AdminList.txt");
 
