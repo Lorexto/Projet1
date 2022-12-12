@@ -6,15 +6,20 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.cell.ComboBoxListCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 
 public class PageAdministrateur extends Scene{
@@ -36,8 +41,6 @@ public class PageAdministrateur extends Scene{
 
 		HBox OptionsAdmin= new HBox();
 		Pane AmbianceAdmin= new Pane();
-
-
 		OptionsAdmin.getChildren().add(BoutonVisualiser);
 		OptionsAdmin.getChildren().add(BoutonAjout);
 		AmbianceAdmin.getChildren().add(Paragraphe);
@@ -61,7 +64,17 @@ public class PageAdministrateur extends Scene{
 		PageAdmin.setPadding(new Insets(5));
 		PageAdmin.setHgap(20);
 		PageAdmin.setVgap(20);
-
+		StackPane listeStagiaires = new StackPane();
+		ScrollPane pane = new ScrollPane();
+//		ListView<Stagiaire> list = new ListView<Stagiaire>();
+	    final ListView<Stagiaire> Stagiaires = new ListView<>();
+	    ObservableList<Stagiaire> items = LectureBin.createArrayListFromBIN();
+	    Stagiaires.setItems(items);
+	    Stagiaires.setPrefSize(200, 250);
+	    Stagiaires.setEditable(true);
+	    Stagiaires.setCellFactory(ComboBoxListCell.forListView(items));
+        listeStagiaires.getChildren().add(Stagiaires);
+        PageAdmin.add(listeStagiaires, 2, 7);
 
 
 

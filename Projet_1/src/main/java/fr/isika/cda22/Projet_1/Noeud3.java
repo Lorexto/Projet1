@@ -1,17 +1,14 @@
 package fr.isika.cda22.Projet_1;
-import java.io.BufferedReader;
 import java.io.EOFException;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 
 
 
 public class Noeud3 {
-	
+
 	public final static int TAILLE_MAX_NOM = 20; // en caractères ! pas en octets
 	public final static int TAILLE_MAX_PRENOM = 20;
 	public final static int TAILLE_MAX_DPT = 4;
@@ -24,7 +21,7 @@ public class Noeud3 {
 	public final static int TAILLE_IND_DBL = 4;
 	public final static int TAILLE_NUM_NOEUD = 4; // 1 int 4 octets
 	public final static int TAILLE_NOEUD = TAILLE_CLE_OCTET + TAILLE_IND_FG + TAILLE_IND_FD + TAILLE_IND_DBL + TAILLE_NUM_NOEUD; // 128
-	
+
 	///////////////////////// attributs///////////////////////////////////////
 	private Stagiaire cle;
 	private int filsGauche;
@@ -32,9 +29,9 @@ public class Noeud3 {
 	private int doublon;
 	private int numeroNoeud;
 	private int compteTours=0;
-	
+
 	///////////////////////// Constructeurs////////////////////////////////
-	
+
 	public Noeud3() {
 		super();
 	}
@@ -46,7 +43,7 @@ public class Noeud3 {
 		this.doublon = doublon;
 		this.numeroNoeud = numeroNoeud;
 	}
-	
+
 	///////////////////// getters & setters/////////////////////////////////////
 	public Stagiaire getCle() {
 		return cle;
@@ -78,7 +75,7 @@ public class Noeud3 {
 	public void setDoublon(int doublon) {
 			this.doublon = doublon;
 		}
-	
+
 // /////////////////////TOSTRING/////////////////////////////////////////////
 	@Override
 	public String toString() {
@@ -87,11 +84,11 @@ public class Noeud3 {
 	}
 //////////////////////////////////////////////////////////////////////////////////////
 	//////// ECRIT LES STAGIAIRES EN FIN DE FICHIER BIN/////////
-///////////////////////////////////////////////////////////////////////////////////////	
-	public int ecrireNoeudFinBin(Noeud3 n,RandomAccessFile raf) {
-		
+///////////////////////////////////////////////////////////////////////////////////////
+	public static int ecrireNoeudFinBin(Noeud3 n,RandomAccessFile raf) {
+
 		Stagiaire cle = n.getCle();
-		try {			
+		try {
 			raf.seek(raf.length());
 			System.out.println(raf.length());
 			raf.writeChars(cle.getNomLong());
@@ -108,19 +105,19 @@ public class Noeud3 {
 			raf.close();
 			return curseur;
 		} catch (IOException e) {
-			e.printStackTrace(); 
+			e.printStackTrace();
 			return -1;}
 	}
 	//////////////////////////////////////////////////////////////////////////
-	
-	public void ajouterStagiaire(Noeud3 n, Noeud3 nParent,RandomAccessFile raf) throws FileNotFoundException, EOFException {
-		
+
+	public static void ajouterStagiaire(Noeud3 n, Noeud3 nParent,RandomAccessFile raf) throws FileNotFoundException, EOFException {
+
 		File fileBIN= new File ("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin");
 		raf = new RandomAccessFile(fileBIN, "rw");
 		Stagiaire cle = n.getCle();
-		Stagiaire cleParent = nParent.getCle();	
+		Stagiaire cleParent = nParent.getCle();
 		System.out.println("Ajout .bin " + cle);
-		
+
 //////SI NOM ET PRENOM EGAUX. NB= NE FONCTIONNE QUE AVEC LE CONTAINS
 
 		 if ( (cleParent.getNom().contains(cle.getNom())) ) {
@@ -132,22 +129,22 @@ public class Noeud3 {
 					System.out.println("Modification indice DBL de " + nParent.getCle().getNom() + " à " + n.getNumeroNoeud());
 					}
 				else {
-				ajouterStagiaire(n, nParent.lireParentSuivant(nParent.getDoublon(), raf), raf);
-				System.out.println("Ajout de " + n.getCle().getNom() + " doublon de " + nParent.getCle().getNom());				
-				System.out.println("++++++");			
+				ajouterStagiaire(n, Noeud3.lireParentSuivant(nParent.getDoublon(), raf), raf);
+				System.out.println("Ajout de " + n.getCle().getNom() + " doublon de " + nParent.getCle().getNom());
+				System.out.println("++++++");
 				}
 		 }
-		//if (cle.compareTo(cleParent)>0){// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////		
+		//if (cle.compareTo(cleParent)>0){// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////
 		 else {
 			 if(cle.compareTo(cleParent)<0) { // si on va à droite
 				if (nParent.getFilsDroit() == -1) {
 					ecrireNoeudFinBin(n, raf);
-					//int curseur = ecrireNoeudFinBin(n, raf) - TAILLE_NOEUD; 
+					//int curseur = ecrireNoeudFinBin(n, raf) - TAILLE_NOEUD;
 					System.out.println("Ajout de " + n.getCle().getNom() + " fils droit de " + nParent.getCle().getNom());
 					System.out.println("Modification indice FD de " + nParent.getCle().getNom() + " à " + n.getNumeroNoeud());
 					// on met l'indice du noeud ici
 					nParent.setFilsDroit(n.getNumeroNoeud());
-					
+
 					System.out.println("noued du parent " + nParent.getNumeroNoeud());
 					//System.out.println("curseur correspondant : " + (nParent.getNumeroNoeud() * TAILLE_NOEUD));
 					modifierIndice(nParent.getNumeroNoeud() * TAILLE_NOEUD, n.getNumeroNoeud(),"FD", raf);
@@ -155,7 +152,7 @@ public class Noeud3 {
 			}else {// on passe au FD, via l'indice
 				System.out.println("parent de " + n.getCle().getNom() + " : " + nParent.getCle().getNom());
 				System.out.println("on veut aller au neu "+ nParent.getFilsDroit());
-				ajouterStagiaire(n, nParent.lireParentSuivant(nParent.getFilsDroit(), raf), raf);
+				ajouterStagiaire(n, Noeud3.lireParentSuivant(nParent.getFilsDroit(), raf), raf);
 			}
 		 }
 //if (cle.compareTo(cleParent)>0){// SI Valeur nouveau nom inferieur a valeur nom racine on va a gauche/////
@@ -174,52 +171,52 @@ public class Noeud3 {
 					}else {// on passe au FD, via l'indice
 						//System.out.println("Recherche ajout de " + n.getCle().getNom() + " vers " + nParent.noeudGauche.getCle());
 						System.out.println("parent de " + n.getCle().getNom() + " : " + nParent.getCle().getNom());
-						ajouterStagiaire(n, nParent.lireParentSuivant(nParent.getFilsGauche(), raf), raf);					
+						ajouterStagiaire(n, Noeud3.lireParentSuivant(nParent.getFilsGauche(), raf), raf);
 						}
 			}
 		 }
 		}
-	  
-///////////////////////////////////////////////////////////////////////////			
-/////////////////MODIFIE LES INDICES FG FD DOUBLON AU FUR ET A MESURE	
-///////////////////////////////////////////////////////////////////////////	
-	public void modifierIndice(int curseur, int num, String fils,RandomAccessFile raf) {
-		
+
+///////////////////////////////////////////////////////////////////////////
+/////////////////MODIFIE LES INDICES FG FD DOUBLON AU FUR ET A MESURE
+///////////////////////////////////////////////////////////////////////////
+	public static void modifierIndice(int curseur, int num, String fils,RandomAccessFile raf) {
+
 		try {
 		 raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
-			
+
 		if (fils == "FD") {
 			System.out.println("avant "+(int)raf.getFilePointer());
 			raf.seek(curseur+TAILLE_CLE_OCTET + TAILLE_IND_FG);
 			raf.writeInt(num);
 			raf.seek((int)raf.getFilePointer() + TAILLE_IND_DBL + TAILLE_NUM_NOEUD);
 			System.out.println((int)raf.getFilePointer());
-		}	
-		else if (fils == "FG"){	
+		}
+		else if (fils == "FG"){
 			System.out.println("avant "+(int)raf.getFilePointer());
 			raf.seek(curseur+TAILLE_CLE_OCTET);
 			System.out.println("curseur modif FG : "+(curseur + TAILLE_CLE_OCTET));
 		    raf.writeInt(num);
 			raf.seek((int)raf.getFilePointer() + TAILLE_IND_FD + TAILLE_IND_DBL + TAILLE_NUM_NOEUD);
-			System.out.println((int)raf.getFilePointer());				
+			System.out.println((int)raf.getFilePointer());
 		}
 		else if(fils=="DBL") {
 			System.out.println("avant "+(int)raf.getFilePointer());
 			raf.seek(curseur+(TAILLE_CLE_OCTET+TAILLE_IND_FG+TAILLE_IND_FD));
 			raf.writeInt(num);
 			raf.seek((int)raf.getFilePointer() + TAILLE_NUM_NOEUD);
-			System.out.println((int)raf.getFilePointer());		
+			System.out.println((int)raf.getFilePointer());
 		}
 		raf.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-//////////////////////////////////////////////	
+//////////////////////////////////////////////
 	// LIT LES NOEUDS SELON LE NUMERO CHOISI
-//////////////////////////////////////////////	
-	public Noeud3 lireParentSuivant(int numNoeudALire, RandomAccessFile raf) throws EOFException {
-		
+//////////////////////////////////////////////
+	public static Noeud3 lireParentSuivant(int numNoeudALire, RandomAccessFile raf) throws EOFException {
+
 		try {
 			while(numNoeudALire<= raf.length()/132) {
 			raf.seek(numNoeudALire * TAILLE_NOEUD);
@@ -227,29 +224,29 @@ public class Noeud3 {
 				String nom = "";
 				for(int i = 0; i < 20 ; i++) {
 					nom += raf.readChar();
-				}	
+				}
 				String prenom = "";
 				for(int i = 0; i < 20 ; i++) {
 					prenom += raf.readChar();
-				}	
+				}
 				String dpt = "";
 				for(int i = 0; i < 4 ; i++) {
 					dpt += raf.readChar();
-				}	
+				}
 				String id = "";
 				for(int i = 0; i < 10 ; i++) {
 					id += raf.readChar();
-				}	
+				}
 				String annee = "";
 				for(int i = 0; i < 4 ; i++) {
 					annee += raf.readChar();
-				}	
+				}
 //////////////////// LIRE les indices//////////////////////////////
 				int FG = raf.readInt();
 				int FD = raf.readInt();
 				int DBL = raf.readInt();
 				int NumNoeud = raf.readInt();
-	
+
 				Stagiaire st = new Stagiaire(nom, prenom, dpt, id, annee);
 				Noeud3 n = new Noeud3(st, FG, FD, DBL, NumNoeud);
 				//raf.close();
@@ -262,33 +259,33 @@ public class Noeud3 {
 			return null;
 		}
 		return null;
-		
+
 	}
 
-///////////////////////////////////////////////////////////////////	
-	
-public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+///////////////////////////////////////////////////////////////////
+
+public String lireNom(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 	String nom="";
 	try {
 		raf.seek(numNoeudALire * TAILLE_NOEUD);
-		System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+		System.out.println("Position curseur :  " + (int)raf.getFilePointer());
 		for(int j = 0; j < 20 ; j++) {
 			nom += raf.readChar();}
 		System.out.println(nom);
 		}catch (IOException e) {
-			e.printStackTrace();	
+			e.printStackTrace();
 		}
 		return nom;
 }
-/////////////////////////////////////////////////////////////////	
-///////////////////////////////////////////////////////////////////	
+/////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 
-public int lireFD(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+public int lireFD(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int FD=-1;
 try {
 	System.out.println(numNoeudALire);
 raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET+TAILLE_IND_FG);
-System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+System.out.println("Position curseur :  " + (int)raf.getFilePointer());
 FD = raf.readInt();
 System.out.println(FD+"---");
 System.out.println(FD+"FD+++");
@@ -296,41 +293,41 @@ System.out.println(FD+"FD+++");
 return FD;
 
 }catch (IOException e) {
-e.printStackTrace();	
+e.printStackTrace();
 }
 return FD;
 }
 
 /////////////////////////////////////////////////////////////////
-public int lireFG(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+public int lireFG(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int FG=-1;
 
 try {
 raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET);
 System.out.println(numNoeudALire);
-System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+System.out.println("Position curseur :  " + (int)raf.getFilePointer());
 FG = raf.readInt();
 System.out.println(FG+"+++");
 return FG;
 }catch (IOException e) {
-e.printStackTrace();	
+e.printStackTrace();
 }
 return FG;
 
 }
 //////////////////////////////////////////////////////////
-public int lireDBL(int numNoeudALire, RandomAccessFile raf) throws EOFException {	
+public int lireDBL(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 int DBL=-1;
 
 try {
 raf.seek((numNoeudALire * 132)+TAILLE_CLE_OCTET+TAILLE_IND_FG+TAILLE_IND_FD);
 System.out.println(numNoeudALire);
-System.out.println("Position curseur :  " + (int)raf.getFilePointer());		
+System.out.println("Position curseur :  " + (int)raf.getFilePointer());
 DBL = raf.readInt();
 System.out.println(DBL+"---");
 return DBL;
 }catch (IOException e) {
-e.printStackTrace();	
+e.printStackTrace();
 }
 return DBL;
 
@@ -339,8 +336,8 @@ return DBL;
 
 
 		//@SuppressWarnings("unused")
-public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOException {	
-	try {	
+public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOException {
+	try {
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
 		int sizeFile= (int) raf.length();
 		int maxNoeuds= sizeFile/132;
@@ -355,15 +352,15 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 		    }
 		System.out.println("RECHERCHE PAR NOM DE :  "+ nomRech);
 		// pour limiter la recherche en nombre noeuds
-		
-		for(h=0;h<sizeFile;h++) {		
+
+		for(h=0;h<sizeFile;h++) {
 		// on compare la lecture des noms du fichierBIN avec le nom recherche
-		if(lireNom(h, raf).compareTo(nomRech)==0){ 
+		if(lireNom(h, raf).compareTo(nomRech)==0){
 	///////// LECTRURE PRENOMS DPT ID ANNEE FG FD DBL POS///////////
 			String prenomBIN = "";
 			for( j =0;  j<20 ; j++) {
 			prenomBIN += raf.readChar();}
-			System.out.println(prenomBIN);	
+			System.out.println(prenomBIN);
 			String dptBIN = "";
 			for(j =0;  j<4 ; j++) {
 			dptBIN += raf.readChar();}
@@ -371,7 +368,7 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 			String idBIN = "";
 			for(j =0;  j<10 ; j++) {
 			idBIN += raf.readChar();}
-			System.out.println(idBIN);	
+			System.out.println(idBIN);
 			String anneeBIN = "";
 			for( j =0;  j<4 ; j++) {
 			anneeBIN += raf.readChar();}
@@ -389,25 +386,25 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 			Noeud3 n2 = new Noeud3(stTrouve, FG, FD, DBL, NumNoeud);
 			System.out.println(" VOICI LE STAGIAIRE TROUVE:   "+lireNom(h, raf));
 			System.out.println(n2.getCle());
-				h=NumNoeud;	
+				h=NumNoeud;
 	        if(DBL!=-1) {
 	        	System.out.println("Autres FD TROUVES");
 	        	raf.seek(DBL*132);
-	        	
-	        	
+
+
 	        }
-			
+
 			return n2;	}
 		}
-	
-		
+
+
 }catch (IOException e) {
 	e.printStackTrace();
 	raf.close();}
 	return null;	}
-		
+
 /////////////////////////////////////////////////
-///////////////////////////////////////////////////		
+///////////////////////////////////////////////////
 //	TROUVE ET ECRIT LES SUCCESSEURS DANS LE FICHIER BIN
 //////////////////////////////////////////////////
 public Noeud3 successeur(Noeud3 n,RandomAccessFile raf) throws IOException {
@@ -448,12 +445,12 @@ return n;
 }
 
 ////////////////////////////////////////////
-///////////////////////////////////////////////////		
+///////////////////////////////////////////////////
 //TROUVE ET ECRIT LES PREDECESSEURS DANS LE FICHIER BIN
 //////////////////////////////////////////////////
 
 public Noeud3 predecesseur(Noeud3 n,RandomAccessFile raf) throws IOException {
-int PositionARemplacer= ((int) raf.getFilePointer());	
+int PositionARemplacer= ((int) raf.getFilePointer());
 n= lireParentSuivant(n.filsGauche, raf);
 raf.seek(n.getNumeroNoeud());
 //init variables a remplacer
@@ -493,7 +490,7 @@ return n;
 ///// METHODE REMPLACER STRINGS DANS BIN
 ////////////////////////////////////////////////////
 private void RemplaceString(int PositionARemplacer, String donneeARemplacer, RandomAccessFile raf) {
-try {			
+try {
 raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
 raf.seek(PositionARemplacer);
 raf.writeChars(donneeARemplacer);
@@ -504,8 +501,8 @@ e.printStackTrace();}
 /////////////////////////////////////////////////////////////////////////////////////
 //////// MODIFIER LES INDICES DU PERE POUR LA SUPPRESSION DE FEUILLE////
 ////////////////////////////////////////////////////////////////////////////////////
-public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {	
-	try {	
+public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
+	try {
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
 		int sizeFile= (int) raf.length();
 		int maxNoeuds= sizeFile/132;
@@ -513,15 +510,15 @@ public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
 		int h;
 		raf.getFilePointer();
 		System.out.println(raf.getFilePointer());
-		 for (h=0; h<maxNoeuds;h++) { 		
+		 for (h=0; h<maxNoeuds;h++) {
 				// on compare la lecture des indices du fichierBIN avec le nom recherche
-				if(lireFD(h, raf)==n.getNumeroNoeud()){ 
+				if(lireFD(h, raf)==n.getNumeroNoeud()){
 					System.out.println(raf.getFilePointer()+"HAHIHO");
 					System.out.println(n.lireFD(h, raf));
 					raf.seek((h*132)+116+TAILLE_IND_FG);
 					System.out.println(raf.getFilePointer());
 					System.out.println("ECRITURE A -1 du pere pour FD");
-					raf.writeInt(-1);	
+					raf.writeInt(-1);
 				}
 				else if(lireFG(h, raf)==n.getNumeroNoeud()) {
 					raf.seek((h*132)+116);
@@ -537,7 +534,7 @@ public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
 					System.out.println("ECRITURE A -1 du pere pour DBL");
 					raf.writeInt(-1);
 				}
-		   } 
+		   }
 	}catch (IOException e) {
 		e.printStackTrace();
 		raf.close();}
@@ -546,7 +543,7 @@ public Noeud3 modifFilsPere(Noeud3 n,RandomAccessFile raf) throws IOException {
 //////////////////METHODE POUR SUPPRIMER NOEUD FICHIER BIN/////////////
 ///////////////////////////////////////////////////////////////////////////
 public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
-	try {			
+	try {
 		raf= new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
 		searchInBinFile(raf, aEffacer.getCle().getNomLong()).getNumeroNoeud();
 		aEffacer.getFilsDroit();
@@ -554,8 +551,8 @@ public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
 		raf.seek(aEffacer.numeroNoeud*132);
 		   if(aEffacer==null) {
 			   System.out.println("Element inexistant");
-			   return null;}  // 
-		   
+			   return null;}  //
+
 		   if(aEffacer.filsGauche==-1 && aEffacer.filsDroit==-1) { // SUPPRESSION FEUILLE
 			   int positionElement=aEffacer.numeroNoeud*132; //position de l'element a supprimer
 			   modifFilsPere(aEffacer, raf);//on va modifier l'indice du pere du noeud a supprimer
@@ -566,10 +563,10 @@ public Noeud3 SupprimerNoeudStagiaireV2(Noeud3 aEffacer,RandomAccessFile raf) {
 					aEffacer.setCle(successeur(aEffacer, raf).cle);
 					aEffacer= SupprimerNoeudStagiaireV2(lireParentSuivant(aEffacer.filsDroit, raf), raf);
 					}
-		   else { 
+		   else {
 					aEffacer.getFilsGauche();
 					aEffacer.setCle(predecesseur(aEffacer, raf).cle);
-					aEffacer= SupprimerNoeudStagiaireV2(lireParentSuivant(aEffacer.filsGauche, raf), raf);		
+					aEffacer= SupprimerNoeudStagiaireV2(lireParentSuivant(aEffacer.filsGauche, raf), raf);
 				}
 	       return aEffacer;
 	}
@@ -631,7 +628,7 @@ public void modifierStagiaire(Stagiaire stModif, RandomAccessFile raf, boolean n
 	Stagiaire stModif2 = new Stagiaire("ELACROIX", "arlette", "98", "ATOD 22", "2014");
 	Noeud3 noeudModif = new Noeud3(stModif2, -1, -1, -1, 0);
 	// si le champ modifié est autre que le nom, on modifie juste les valeurs
-	if (nomModif == false) {
+	if (!nomModif) {
 		ecrireCleBin(noeudModif.getNumeroNoeud(), noeudModif, raf);
 		System.out.println("Modif autre que nom du noeud numéro " + noeudModif.getNumeroNoeud());
 	} else {

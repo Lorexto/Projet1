@@ -17,14 +17,13 @@ public class LoginController {
 	public static TextField User_ID;
 	public static PasswordField userMdpCheck;
 	public PageAdministrateur PageAdmin;
-
-
+	 public VueMenu vueMenu;
 
 
 	public static boolean loginButton(EventHandler<? super MouseEvent> eventHandler) throws IOException
     {
         //Chemin jusqu'au fichir Admin
-        Path path = Paths.get("C\\\\src\\\\main\\\\java\\\\fr\\\\isika\\\\cda22\\\\Projet_1\\\\AdminList.txt");
+        Path path = Paths.get("C:\\Users\\Lorexto\\Desktop\\PROJET 1\\Projet1\\Projet_1\\src\\main\\java\\fr\\isika\\cda22\\Projet_1\\AdminList.txt");
 
         //Compte le nombre de lignes dans le fichier
         long count = Files.lines(path).count();
@@ -51,7 +50,6 @@ public class LoginController {
                             msg.setTitle(VueLogin.User_ID.getText());
                             msg.setContentText("Connexion reussie");
                             msg.showAndWait();
-
                             //Stockage des infos
                             Admin.setUserId(userId);
                             Admin.setMdp(mdp);

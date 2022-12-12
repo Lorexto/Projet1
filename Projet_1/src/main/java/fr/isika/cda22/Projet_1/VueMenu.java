@@ -1,42 +1,234 @@
 package fr.isika.cda22.Projet_1;
-import javafx.application.Application;
-import javafx.stage.Stage;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 
 public class VueMenu extends Scene {
 	GridPane VueMenu;
+	StackPane listeStagiaires;
+	Button search;
+	Button addButton;
+	Button delete;
+	Button refactor;
+	Button disconnect;
+	ChangesController Controlleur;
+
 	public VueMenu()  {
 		super(new GridPane(),800,600);
 		GridPane root = (GridPane)this.getRoot();
-		this.setRoot(root);
-		//création du menu bar
-		MenuBar menuBar=new MenuBar();
-		VBox vBox=new VBox(menuBar);
-		//création d'un menu pour ajouter des éléments de menu
-		Menu menu=new Menu("portail de navigation");
-		//créer des éléments de menu
-		MenuItem item1 = new MenuItem ("Rechercher stagiaire");
-		MenuItem item2 = new MenuItem ("Ajouter stagiaire");
-		MenuItem item3 = new MenuItem ("Déconnexion");
-		//ajouter des éléments au menu
-		menu.getItems().add(item1);	
-		menu.getItems().add(item2);
-		menu.getItems().add(item3);
-	    
-		//ajout d'un menu à la barre de menu
-		menuBar.getMenus().add(menu);
-		//création de VBox pour l'ajout de toutes les barres de menu
-		
-		//ajout d'un volet de défilement à la scène
-//		vBox.getChildren().add(menuBar);
-		root.add(vBox,1,1);
-		
+		//this.setRoot(root);
+
+
+		//BOUTONS
+		search = new Button ("RECHERCHE");
+	    addButton = new Button ("AJOUTER");
+		delete= new Button("SUPPRIMER");
+		refactor= new Button("MODIFIER");
+		disconnect = new Button ("DECONNExION");
+		//HBOX et INSERTON BOUTONS
+		HBox ConteneurBoutons= new HBox();
+		ConteneurBoutons.getChildren().add(0, search);
+		ConteneurBoutons.getChildren().add(1, addButton);
+		ConteneurBoutons.getChildren().add(2, delete);
+		ConteneurBoutons.getChildren().add(3, refactor);
+		ConteneurBoutons.getChildren().add(4, disconnect);
+		//TABLE VIEW
+		TableView<Stagiaire4Liste> table = new TableView<>();
+        final Label label = new Label("Liste des stagiaires");
+        label.setFont(new Font("Arial", 20));
+        table.setEditable(true);
+        TableColumn nomCol = new TableColumn("Nom");
+        nomCol.setMinWidth(100);
+        nomCol.setCellValueFactory(new PropertyValueFactory<Stagiaire4Liste, String>("nom"));
+        TableColumn prenomCol = new TableColumn("Prénom");
+        prenomCol.setMinWidth(100);
+        prenomCol.setCellValueFactory(new PropertyValueFactory<Stagiaire4Liste, String>("prenom"));
+        TableColumn anneeCol = new TableColumn("Année");
+        anneeCol.setMinWidth(50);
+        anneeCol.setCellValueFactory(new PropertyValueFactory<Stagiaire4Liste, String>("annee"));
+        TableColumn promoCol = new TableColumn("Promo");
+        promoCol.setMinWidth(50);
+        promoCol.setCellValueFactory(new PropertyValueFactory<Stagiaire4Liste, String>("id"));
+        TableColumn dptCol = new TableColumn("Département");
+        dptCol.setMinWidth(50);
+        dptCol.setCellValueFactory(new PropertyValueFactory<Stagiaire4Liste, String>("dpt"));
+        table.getColumns().addAll(nomCol, prenomCol, dptCol, promoCol, anneeCol);
+        //On rempli la table avec la liste observable
+        table.setItems(getContactList());
+        VBox vbox = new VBox();
+        vbox.setSpacing(5);
+        vbox.setPadding(new Insets(20, 20, 20, 20));
+
+       //AJOUT ELEMENTS DANS ROOT
+		root.add(ConteneurBoutons,1,2);
+		root.add(table, 1, 4);}
+
+
+//		StackPane listeStagiaires = new StackPane();
+//		ScrollPane pane = new ScrollPane();
+////		ListView<Stagiaire> list = new ListView<Stagiaire>();
+//	    final ListView<Stagiaire> Stagiaires = new ListView<Stagiaire>();
+//	    ObservableList<Stagiaire> items = LectureBin.createArrayListFromBIN();
+//	    Stagiaires.setItems(items);
+//	    Stagiaires.setPrefSize(400, 30);
+//	    Stagiaires.setEditable(true);
+//	    Stagiaires.setCellFactory(ComboBoxListCell.forListView(items));
+//        listeStagiaires.getChildren().add(Stagiaires);
+
+
+private TableView<Stagiaire4Liste> table = new TableView<>();
+
+		private ObservableList<Stagiaire4Liste> getContactList() {
+
+			Stagiaire4Liste st1 = new Stagiaire4Liste("LACROIX","Kim", "CDA", "98", "2012");
+			Stagiaire4Liste st2 = new Stagiaire4Liste("CHAVENEAU","Alex","AL", "98","2012");
+			Stagiaire4Liste st3 = new Stagiaire4Liste("BON","Jean","AL", "38", "2014");
+			ObservableList<Stagiaire4Liste> list = FXCollections.observableArrayList(st1,st2,st3);
+
+			try {
+			RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
+			for (int i=0; i<(int)raf.length()/132; i++) {
+				Noeud3 n = new Noeud3();
+				Noeud3 nCourant = Noeud3.lireParentSuivant(i, raf);
+				String nom = nCourant.getCle().getNomLong().split("\\*")[0];
+				String prenom = nCourant.getCle().getPrenomLong().split("\\*")[0];
+				String id = nCourant.getCle().getId().split("\\*")[0];
+				String dpt = nCourant.getCle().getDpt().split("\\*")[0];
+				String annee = nCourant.getCle().getAnnee().split("\\*")[0];
+				Stagiaire4Liste newSt = new Stagiaire4Liste(nom, prenom, id, dpt, annee);
+				list.add(newSt);
+			}
+
+		    return list;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
 		}
-		
+		}
+
+
+
+
+
+	public GridPane getVueMenu() {
+		return VueMenu;
+	}
+
+
+
+	public void setVueMenu(GridPane vueMenu) {
+		VueMenu = vueMenu;
+	}
+
+
+
+	public StackPane getListeStagiaires() {
+		return listeStagiaires;
+	}
+
+
+
+	public void setListeStagiaires(StackPane listeStagiaires) {
+		this.listeStagiaires = listeStagiaires;
+	}
+
+
+
+	public Button getSearch() {
+		return search;
+	}
+
+
+
+	public void setSearch(Button search) {
+		this.search = search;
+	}
+
+
+
+	public Button getAddButton() {
+		return addButton;
+	}
+
+
+
+	public void setAddButton(Button addButton) {
+		this.addButton = addButton;
+	}
+
+
+
+	public Button getDelete() {
+		return delete;
+	}
+
+
+
+	public void setDelete(Button delete) {
+		this.delete = delete;
+	}
+
+
+
+	public Button getRefactor() {
+		return refactor;
+	}
+
+
+
+	public void setRefactor(Button refactor) {
+		this.refactor = refactor;
+	}
+
+
+
+	public Button getDisconnect() {
+		return disconnect;
+	}
+
+
+
+	public void setDisconnect(Button disconnect) {
+		this.disconnect = disconnect;
+	}
+
+
+
+
+
+	public TableView<Stagiaire4Liste> getTable() {
+		return table;
+	}
+
+
+
+
+
+	public void setTable(TableView<Stagiaire4Liste> table) {
+		this.table = table;
+	}
+
+
+
+
+
+
+
+
+
 		}

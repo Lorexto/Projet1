@@ -1,7 +1,7 @@
 package fr.isika.cda22.Projet_1;
 public class Stagiaire {
 	//attributs
-	
+
 	private String nom;
 	private String prenom;
 	private String dpt;
@@ -25,20 +25,20 @@ public class Stagiaire {
 
 	public final static int TAILLE_NOEUD = TAILLE_CLE + TAILLE_IND_FG + TAILLE_IND_FD + TAILLE_IND_DBL + TAILLE_NUM_NOEUD; // 61 caract 128 octets
 
-	
+
 	//constructeurs
-	
+
 	public Stagiaire(String nom, String prenom, String dpt, String id, String annee) {
-		
+
 		this.nom = nom;
 		this.prenom = prenom;
 		this.dpt = dpt;
 		this.id = id;
 		this.annee = annee;
-		
+
 	}
 
-	
+
 	public String getNomLong() {
 		String nomLong = nom;
 		if (nomLong.length() > TAILLE_MAX_NOM ) {
@@ -52,17 +52,17 @@ public class Stagiaire {
 	}
 	public <nom> String setToNomLong() {
 		String nomLong = null;
-		
+
 			for(int i = nom.length(); i < TAILLE_MAX_NOM; i++) {
 				nomLong += nom+"*";
 			}
-		
+
 		return nomLong;
 	}
-	
-	
-	
-	
+
+
+
+
 	public String getPrenomLong() {
 		String prenomLong = prenom;
 		if (prenomLong.length() > TAILLE_MAX_PRENOM ) {
@@ -74,8 +74,8 @@ public class Stagiaire {
 		}
 		return prenomLong;
 	}
-	
-	
+
+
 	public String getDptLong() {
 		String dptLong = dpt;
 		if (dptLong.length() > TAILLE_MAX_DPT ) {
@@ -87,7 +87,7 @@ public class Stagiaire {
 		}
 		return dptLong;
 	}
-	
+
 	public String getIdLong() {
 		String idLong = id;
 		if (idLong.length() > TAILLE_MAX_ID ) {
@@ -99,7 +99,7 @@ public class Stagiaire {
 		}
 		return idLong;
 	}
-	
+
 	public String getAnneeLong() {
 		String anneeLong = annee;
 		if (anneeLong.length() > TAILLE_MAX_ANNEE ) {
@@ -111,19 +111,19 @@ public class Stagiaire {
 		}
 		return anneeLong;
 	}
-	
+
 	//getters & setters
-	
+
 	public String getNom() {
 		return nom;
 	}
 	public void setNom(String nom) {
 		this.nom = nom;
 	}
-	
 
 
-	
+
+
 	public String getPrenom() {
 		return prenom;
 	}
@@ -148,31 +148,32 @@ public class Stagiaire {
 	public void setAnnee(String annee) {
 		this.annee = annee;
 	}
-	
-	
-	//méthodes spécifiques
-	
 
-	
+
+	//méthodes spécifiques
+
+
+
+	@Override
 	public String toString() {
-		
+
 		return "(" + nom + " " + prenom + " " + dpt + " " + id + " " + annee+ ")";
 	}
-	
+
 //	public int compareTo(StagiaireSS myStagiaire){
 //		if (myStagiaire.getNom().compareTo(this.nom) == 0) { // 0 si c'est identique
 //			return myStagiaire.getPrenom().compareTo(this.prenom);
-//			    
-//			
+//
+//
 //			// on compare les prénoms
 //		} else {
-//			
-//			
+//
+//
 //			return myStagiaire.getNom().compareTo(this.nom); // sinon on compare les noms
-//		}	
+//		}
 //	}
-	
-	
+
+
 	public int compareTo(Stagiaire myStagiaire){
 		if (myStagiaire.getNom().compareTo(this.nom) == 0) { // 0 si c'est identique
 			return myStagiaire.getPrenom().compareTo(this.prenom);	// on compare les prénoms
@@ -180,23 +181,23 @@ public class Stagiaire {
 			return myStagiaire.getNom().compareTo(this.nom); // sinon on compare les noms
 		}
 	}
-	
-	
+
+
 	public boolean compareToDoublon(Stagiaire myStagiaire){
 		if (myStagiaire.getNom().compareTo(this.getNom()) == 0&&myStagiaire.getPrenom().compareTo(this.getPrenom())==0) { // 0 si c'est identique
-			 
+
 				return true;
 			}
 			else {return false;}
-				
+
 			// on compare les prénoms
-	
+
 	}
 
 
 	public void setNom(Object writeChars, String nomLong) {
-		
-		
+
+
 	}
 }
 
