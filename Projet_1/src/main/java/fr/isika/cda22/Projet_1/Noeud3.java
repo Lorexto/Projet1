@@ -394,6 +394,7 @@ public Noeud3 searchInBinFile(RandomAccessFile raf, String nomRech) throws IOExc
 	        	System.out.println("Autres FD TROUVES");
 	        	raf.seek(DBL*132);
 	        	
+	        	
 	        }
 			
 			return n2;	}
