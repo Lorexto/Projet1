@@ -1,5 +1,6 @@
 package fr.isika.cda22.Projet_1;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -13,11 +14,14 @@ public class LectureBin {
 
 
 	System.out.println("Lecture du fichier bin");
+try {	
 try {
 	RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
     raf.seek(0);
+    int FileSize = (int)raf.length();
 	int NumNoeud;
 System.out.println("Lecture du fichier bin");
+while(raf.getFilePointer()<FileSize) {
 for (int j = 0; j < 58; j++) {
 	String contenu = "";
 	for(int i = 0; i < 58 ; i++) {
@@ -29,9 +33,16 @@ for (int j = 0; j < 58; j++) {
 	NumNoeud= (int) ((raf.getFilePointer()-132)/132);
 	System.out.println("Noeud " + NumNoeud + " : "+contenu +"\n");
 }
-raf.close();
-} catch (IOException e) {
-  e.printStackTrace();}
+
+}
+
+}  catch (EOFException eofe) {
+    System.out.println("End of file reached");
+   }
+}catch (IOException ioe) {
+        ioe.printStackTrace();
+    }
+
 	}
 
 
@@ -84,58 +95,58 @@ raf.close();
 	}
 
 
-	public static ObservableList<Stagiaire> createArrayListFromBIN() {
-
-		try {
-			 RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
-
-			int numNoeudALire= (int) raf.getFilePointer()/132;
-			raf.seek(0);
-		while(numNoeudALire<= raf.length()/132) {
-			raf.seek(numNoeudALire * Noeud3.TAILLE_NOEUD);
-			System.out.println("dans le lire" + (int)raf.getFilePointer());
-				String nom = "";
-				for(int i = 0; i < 20 ; i++) {
-					nom += raf.readChar();
-				}
-				String prenom = "";
-				for(int i = 0; i < 20 ; i++) {
-					prenom += raf.readChar();
-				}
-				String dpt = "";
-				for(int i = 0; i < 4 ; i++) {
-					dpt += raf.readChar();
-				}
-				String id = "";
-				for(int i = 0; i < 10 ; i++) {
-					id += raf.readChar();
-				}
-				String annee = "";
-				for(int i = 0; i < 4 ; i++) {
-					annee += raf.readChar();
-				}
-//////////////////// LIRE les indices//////////////////////////////
-				int FG = raf.readInt();
-				int FD = raf.readInt();
-				int DBL = raf.readInt();
-				int NumNoeud = raf.readInt();
-
-				Stagiaire st = new Stagiaire(nom, prenom, dpt, id, annee);
-				ArrayList<Stagiaire>Stagiaires= new ArrayList<>();
-				Stagiaires.add(st);
-				ObservableList<Stagiaire> ListeStagiaires= FXCollections.observableArrayList(Stagiaires);
-				return ListeStagiaires;
-	}
-		raf.close();
-		}catch (IOException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-		return null;
-	}
-		return null;
-
-
-}
+//	public static ObservableList<Stagiaire> createArrayListFromBIN() {
+//
+//		try {
+//			 RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
+//
+//			int numNoeudALire= (int) raf.getFilePointer()/132;
+//			raf.seek(0);
+//		while(numNoeudALire<= raf.length()/132) {
+//			raf.seek(numNoeudALire * Noeud3.TAILLE_NOEUD);
+//			System.out.println("dans le lire" + (int)raf.getFilePointer());
+//				String nom = "";
+//				for(int i = 0; i < 20 ; i++) {
+//					nom += raf.readChar();
+//				}
+//				String prenom = "";
+//				for(int i = 0; i < 20 ; i++) {
+//					prenom += raf.readChar();
+//				}
+//				String dpt = "";
+//				for(int i = 0; i < 4 ; i++) {
+//					dpt += raf.readChar();
+//				}
+//				String id = "";
+//				for(int i = 0; i < 10 ; i++) {
+//					id += raf.readChar();
+//				}
+//				String annee = "";
+//				for(int i = 0; i < 4 ; i++) {
+//					annee += raf.readChar();
+//				}
+////////////////////// LIRE les indices//////////////////////////////
+//				int FG = raf.readInt();
+//				int FD = raf.readInt();
+//				int DBL = raf.readInt();
+//				int NumNoeud = raf.readInt();
+//
+//				Stagiaire st = new Stagiaire(nom, prenom, dpt, id, annee);
+//				ArrayList<Stagiaire>Stagiaires= new ArrayList<>();
+//				Stagiaires.add(st);
+//				ObservableList<Stagiaire> ListeStagiaires= FXCollections.observableArrayList(Stagiaires);
+//				return ListeStagiaires;
+//	}
+//		raf.close();
+//		}catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//		return null;
+//	}
+//		return null;
+//
+//
+//}
 
 
 }

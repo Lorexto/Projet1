@@ -32,10 +32,6 @@ public class ChangesController {
 
 
 	public static boolean AddFormulaireToBIN( EventHandler<? super MouseEvent> eventHandler) throws IOException{
-
-		
-		
-		
 		
 		String nom=VueFormulaire.txtNom.getText();
 		String prenom=VueFormulaire.txtPrenom.getText();
@@ -58,14 +54,14 @@ public class ChangesController {
 		
 		Stagiaire nouveau= new Stagiaire(nom, prenom, dpt, id, annee);
 
-		Noeud3 nvo= new Noeud3(nouveau, -1, -1, -1, -1);
-		Noeud3.ajouterStagiaire(nvo, (Noeud3.lireParentSuivant(0, raf)), raf);
+		Noeud3 nvo= new Noeud3(nouveau, -1, -1, -1,( (int)raf.length()/Noeud3.TAILLE_NOEUD));
+		Noeud3.ajouterStagiaire(nvo,(Noeud3.lireParentSuivant(0, raf)) , raf);
+		
 		LectureBin.LectureBin();
-
+		VueMenu.table.refresh();
 		return true;
 		}
 		else {
-
 			System.out.println("Veuillez entrer des donnees correctes");
             Alert msg = new Alert(AlertType.WARNING);
             msg.setTitle("Informations incompletes");
@@ -75,14 +71,47 @@ public class ChangesController {
 		}
 		
 	}
+	
 
 	public static boolean Ajouter( EventHandler<? super MouseEvent> eventHandler) throws IOException{
 		return true;
 
 	}
 
+	public static boolean Modifier( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+		
+		return true;
+
+	}
+	
+public static boolean Update( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+		
+	VueMenu.table.refresh();
+		
+		return true;
+
+	}
 
 
+public static boolean Deconnexion( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+	System.out.println("Vous allez vous deconnecter.Etes vous sur?");
+    Alert msg = new Alert(AlertType.CONFIRMATION);
+    msg.setTitle("Deconnexion");
+    msg.setContentText("Vous allez vous deconnecter.Etes vous sur?");
+    msg.showAndWait();
+	return true;
+
+}
+
+public static boolean Search( EventHandler<? super MouseEvent> eventHandler) throws IOException{
+	
+	
+	
+	return false;
+	
+	
+	
+}
 
 
 

@@ -216,12 +216,12 @@ public class Noeud3 {
 //////////////////////////////////////////////
 	// LIT LES NOEUDS SELON LE NUMERO CHOISI
 //////////////////////////////////////////////
-	public static Noeud3 lireParentSuivant(int numNoeudALire, RandomAccessFile raf) {
+	public static Noeud3 lireParentSuivant(int numNoeudALire, RandomAccessFile raf) throws EOFException {
 
 		try {
 			while(numNoeudALire<= raf.length()/132) {
 			raf.seek(numNoeudALire * TAILLE_NOEUD);
-			System.out.println("dans le lire" + (int)raf.getFilePointer());
+			//System.out.println("dans le lire" + (int)raf.getFilePointer());
 				String nom = "";
 				for(int i = 0; i < 20 ; i++) {
 					nom += raf.readChar();
@@ -251,7 +251,7 @@ public class Noeud3 {
 				Stagiaire st = new Stagiaire(nom, prenom, dpt, id, annee);
 				Noeud3 n = new Noeud3(st, FG, FD, DBL, NumNoeud);
 				//raf.close();
-				System.out.println("nouveau parent : " + n);
+				//System.out.println("nouveau parent : " + n);
 				return n;
 				}
 		} catch (IOException e) {
@@ -334,24 +334,6 @@ return DBL;
 
 }
 ////////////////////////////////////////////////////////
-
-public ArrayList<Noeud3> ordreAlpha(int numNoeud, RandomAccessFile raf, ArrayList<Noeud3> ListOrdreAlpha) {
-
-	
-	Noeud3 n = lireParentSuivant(numNoeud, raf); // on lit le noeud
-
-	if (n.getFilsGauche() != -1) {
-		ordreAlpha(n.getFilsGauche(), raf, ListOrdreAlpha);
-	}
-	ListOrdreAlpha.add(n);
-
-	if (n.getFilsDroit() != -1) {
-		ordreAlpha(n.getFilsDroit(), raf, ListOrdreAlpha);
-	}
-
-	return ListOrdreAlpha;
-}
-
 
 
 		//@SuppressWarnings("unused")
@@ -661,9 +643,47 @@ public void modifierStagiaire(Stagiaire stModif, RandomAccessFile raf, boolean n
 	}
 }
 
+////////////////////////////////////////////////////////////////
+///////////////////////Methode TRI ALPHABETIQUE/////////////
+///////////////////////////////////////////////////////////////
+public ArrayList<Noeud3> ordreAlpha(int numNoeud, RandomAccessFile raf, ArrayList<Noeud3> ListOrdreAlpha) {
+	
+	Noeud3 n;
+	try {
+		n = lireParentSuivant(numNoeud, raf);
+	
+	if (n.getDoublon() == -1) {
+		if (n.getFilsGauche() != -1) { // tant qu'il y a un FG, on continue jusqu'à trouver le plus petit FG
+			ordreAlpha(n.getFilsGauche(), raf, ListOrdreAlpha);
+		}
+		ListOrdreAlpha.add(n); // donc on l'ajoute à la liste
+		if (n.getFilsDroit() != -1) { // puis on regarde les FD, qui vont être ajoutés au prochain tour s'ils n'ont pas de FG
+			ordreAlpha(n.getFilsDroit(), raf, ListOrdreAlpha);
+		}
+	}
+	else {
+		if (n.getFilsGauche() != -1) { // tant qu'il y a un FG, on continue jusqu'à trouver le plus petit FG
+			ordreAlpha(n.getFilsGauche(), raf, ListOrdreAlpha);
+		}
+		ordreAlpha(n.getDoublon(), raf, ListOrdreAlpha);
+		ListOrdreAlpha.add(n); // donc on l'ajoute à la liste
+		if (n.getFilsDroit() != -1) { // puis on regarde les FD, qui vont être ajoutés au prochain tour s'ils n'ont pas de FG
+			ordreAlpha(n.getFilsDroit(), raf, ListOrdreAlpha);
+		}	}
+	return ListOrdreAlpha;
+	
+	}
+	 catch (EOFException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	} // on lit le noeud
+	return ListOrdreAlpha;
+}
+
 
 
 ////////////////////////////////////////////////FIN METHODE/////////////////////////////////////////////
+
 
 
 

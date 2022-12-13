@@ -6,7 +6,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 public class Lanceur3 {
 
-	public final static int TAILLE_NOEUD = 2*20 + 4*3;
+	public final static int TAILLE_NOEUD = 132;
 	public final static int TAILLE_NOM = 2*20;
 	public final static int TAILLE_IND_FG = 2*4;
 	public final static int TAILLE_IND_FD = 2*4;
@@ -43,7 +43,13 @@ public class Lanceur3 {
 //					raf.seek(0);
 //                   LectureBin.LectureBin();
                   // n.SupprimerNoeudStagiaireV2( n.searchInBinFile(raf, "AUGEREAU"), raf);
-                  //LectureBin.LectureBin();
+                  LectureBin.LectureBin();
+                  
+                  Stagiaire Paul= new Stagiaire("HAHAHA", "Paul", "33", "CDA22", "2008");
+                  System.out.println(raf.length());
+                  Noeud3 nPaul= new Noeud3(Paul, -1, -1, -1, ((int)raf.length()/TAILLE_NOEUD));
+                  Noeud3.ajouterStagiaire(nPaul,(Noeud3.lireParentSuivant(0, raf)) , raf);
+                  LectureBin.LectureBin();
                   //LectureBin.LectureBinSansLesSupprimes();
 				} catch (IOException e) {
 					e.printStackTrace();

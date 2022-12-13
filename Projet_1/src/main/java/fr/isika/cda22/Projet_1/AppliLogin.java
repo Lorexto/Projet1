@@ -14,26 +14,23 @@ import javafx.stage.Stage;
 public class AppliLogin extends Application {
 
 	public VueLogin Login;
-	public PageAdministrateur PageAdmin;
 	public LoginController LoginControl;
 	public ChangesController controlleur;
 public VueMenu vueMenu;
 public VueFormulaire Formulaire;
 
     @Override
-    public void start(Stage stage) throws FileNotFoundException {
+    public void start(Stage stage) throws FileNotFoundException, IOException {
 
 
     	Login= new VueLogin();
-    	PageAdmin =new PageAdministrateur();
-    	vueMenu= new VueMenu();
+       	vueMenu= new VueMenu();
     	Formulaire= new VueFormulaire();
 
     	// Si on clique sur Valider
     	Login.getSubmit().setOnAction(eventAction ->{
 
     	try {
-				LoginController.loginButton(Login.submit.getOnMouseClicked());
 
         	  if (LoginController.loginButton(Login.submit.getOnMouseClicked()))
         	         {stage.setScene(vueMenu);}
@@ -57,7 +54,7 @@ public VueFormulaire Formulaire;
 
     	Formulaire.getBtn().setOnAction(eventAction ->{
     		try {
-				ChangesController.AddFormulaireToBIN(Formulaire.btn.getOnMouseClicked());
+				//ChangesController.AddFormulaireToBIN(Formulaire.btn.getOnMouseClicked());
 				if(ChangesController.AddFormulaireToBIN(Formulaire.btn.getOnMouseClicked())) {
 					stage.setScene(vueMenu);
 				}
@@ -67,16 +64,46 @@ public VueFormulaire Formulaire;
 			}
 
     	});
-
-
-
-
-
+    	vueMenu.getRefresh().setOnAction(eventAction ->{
+    		
+    		try {
+				if(ChangesController.Update(vueMenu.refresh.getOnMouseClicked())) {
+					VueMenu.table.setItems(VueMenu.getContactList());
+					VueMenu.table.refresh();
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    
+    	});
+    	
+    	vueMenu.getDisconnect().setOnAction(eventAction ->{
+    		
+    		try {
+				if(ChangesController.Deconnexion(vueMenu.disconnect.getOnMouseClicked())) {
+					stage.setScene(Login);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	});
+    	
+    	vueMenu.getTable();
+    	
+    	
+    	
+    	
+    	
+    	
+    
 
 
 
 
         stage.setScene(Login);
+        stage.setTitle("École ISIKA");
         stage.show();
     }
 

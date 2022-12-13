@@ -16,6 +16,12 @@ Rosie
 AI 79
 2011
 *
+GARIJO
+Rosia
+75
+AI 79
+2011
+*
 POTIN
 Thomas
 75
@@ -63,22 +69,4 @@ Dominique
 75
 AI 61
 2003
-*
-LECLERC
-Jeanne
-75
-AI 61
-2003
-*
-BOUCHET
-Laurent
-91
-ATOD 19 CP
-2013
-*
-BOUAMAMA
-Yahya
-93
-AROBAS 3
-2008
 *

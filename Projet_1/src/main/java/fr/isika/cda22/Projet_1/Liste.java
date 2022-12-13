@@ -2,7 +2,6 @@ package fr.isika.cda22.Projet_1;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
-import java.util.ArrayList;
 
 import javafx.application.Application;
 import javafx.collections.FXCollections;
@@ -23,41 +22,23 @@ public class Liste extends Application {
 
 	private ObservableList<Stagiaire4Liste> getContactList() {
 
+		Stagiaire4Liste st1 = new Stagiaire4Liste("LACROIX","Kim", "CDA", "98", "2012");
+		Stagiaire4Liste st2 = new Stagiaire4Liste("CHAVENEAU","Alex","AL", "98","2012");
+		Stagiaire4Liste st3 = new Stagiaire4Liste("BON","Jean","AL", "38", "2014");
+		ObservableList<Stagiaire4Liste> list = FXCollections.observableArrayList(st1,st2,st3);
 
-		Noeud3 n = new Noeud3();
-				
 		try {
 		RandomAccessFile raf = new RandomAccessFile("src/main/java/fr/isika/cda22/Projet_1/fichbinTEST3.bin", "rw");
-		ArrayList<Noeud3> ListOrdreAlpha = new ArrayList<Noeud3>();
-		ListOrdreAlpha = n.ordreAlpha(0, raf, ListOrdreAlpha);
-		Noeud3 racine = ListOrdreAlpha.get(0);
-
-		Stagiaire4Liste st1 = new Stagiaire4Liste(racine.getCle().getNom().split("\\*")[0], racine.getCle().getPrenom().split("\\*")[0], racine.getCle().getId().split("\\*")[0], racine.getCle().getDpt().split("\\*")[0], racine.getCle().getAnnee().split("\\*")[0]);
-		ObservableList<Stagiaire4Liste> list = FXCollections.observableArrayList(st1);
-
-
-		String nomCourant;
-		for (int i=1; i<(int)raf.length()/132; i++) {
-			nomCourant = ListOrdreAlpha.get(i).getCle().getNom().split("\\*")[0];
-		
-		boolean go = true;
-		int j = 1;
-		while (j<(int)raf.length()/132 && go == true) {
-
-			Noeud3 nCourant = n.lireParentSuivant(j, raf);
+		for (int i=0; i<(int)raf.length()/132; i++) {
+			Noeud3 n = new Noeud3();
+			Noeud3 nCourant = Noeud3.lireParentSuivant(i, raf);
 			String nom = nCourant.getCle().getNomLong().split("\\*")[0];
-			j++;
-
-			if (nom.compareTo(nomCourant) == 0) {
-				String prenom = nCourant.getCle().getPrenomLong().split("\\*")[0];
-				String id = nCourant.getCle().getId().split("\\*")[0];
-				String dpt = nCourant.getCle().getDpt().split("\\*")[0];
-				String annee = nCourant.getCle().getAnnee().split("\\*")[0];
-				Stagiaire4Liste newSt = new Stagiaire4Liste(nom, prenom, id, dpt, annee);
-				list.add(newSt);
-				go = false;
-			}
-		}
+			String prenom = nCourant.getCle().getPrenomLong().split("\\*")[0];
+			String id = nCourant.getCle().getId().split("\\*")[0];
+			String dpt = nCourant.getCle().getDpt().split("\\*")[0];
+			String annee = nCourant.getCle().getAnnee().split("\\*")[0];
+			Stagiaire4Liste newSt = new Stagiaire4Liste(nom, prenom, id, dpt, annee);
+			list.add(newSt);
 		}
 
 	    return list;
